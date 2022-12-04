@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Car price predictor</title>
+</head>
+<body>
+
+    <h3>Загрузить данные об автомоболе для прогноза</h3>
+    </br>
+
+    <form id="f_json" enctype="multipart/form-data" method="post">
+        <label for="carjson">Car JSON:</label>
+        <textarea type="text" id="carjson" name="carjson" rows="16" cols="50"></textarea>
+        <input type="submit">
+        <input type="text" id="carprice" name="carprice">
+    </form>
+
+    </br>
+
+    <form id="f_csv" action="/upload_predict_items" enctype="multipart/form-data" method="post">
+      <label for="carjson">Car CSV:</label>
+      <input name="file" type="file">
+      <button type="submit">Upload csv</button>
+    </form>
+  </body>
+    <script>
+        var form = document.getElementById('f_json');
+        form.onsubmit = function(event){
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function()
+                {
+                    if (xhr.readyState == 4 && xhr.status == 200)
+                    {
+                        document.getElementById("carprice").value = xhr.responseText
+                    }
+                }
+                xhr.open('POST','http://127.0.0.1:8000/predict_item_form')
+                xhr.setRequestHeader("Content-Type", "application/json")
+                xhr.setRequestHeader("accept", "application/json")
+                xhr.send(JSON.stringify(document.getElementById("carjson").value));
+                return false;
+            }
+    </script>
+<html>
